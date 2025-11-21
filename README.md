@@ -80,6 +80,7 @@ uv run scheduler.py
 
 **Slime Mould Algorithm (SMA)** adalah algoritma optimasi yang meniru **perilaku jamur lendir (slime mould)** dalam mencari makanan. Jamur lendir mampu bergerak dan membentuk jalur paling efisien menuju sumber makanan — mirip proses mencari solusi terbaik.
 
+![WhatsApp Image 2025-11-21 at 10 39 19_29eec2d4](https://github.com/user-attachments/assets/83c58a18-0407-43ec-894d-5306635584e2)
 
 ## Cara Kerja SMA
 
@@ -159,6 +160,8 @@ Validasi: Mekanisme ini memvalidasi simulasi paralel dan memastikan Makespan yan
 
 Kami memastikan bahwa pengukuran Makespan konsisten dan akurat.Model Makespan Bersama: Kedua algoritma (SHC dan SMA) menggunakan fungsi biaya yang identik (calculate_estimated_makespan di shc_algorithm.py).
 
+<img width="751" height="302" alt="Screenshot 2025-11-21 101020" src="https://github.com/user-attachments/assets/59084f5b-6428-4057-ac14-d18b5941a7c0" />
+
 Model ini menghitung waktu eksekusi sebagai: $\frac{\text{Beban Tugas}}{\text{Core VM}}$.
 
 Makespan adalah nilai $\mathbf{\text{MAX}}$ dari total waktu yang dihabiskan semua VM.
@@ -170,8 +173,6 @@ Pengukuran Waktu Akurat: Pengukuran waktu total dilakukan menggunakan time.monot
 Validasi: Penggunaan monotonic memastikan bahwa waktu yang diukur kebal terhadap perubahan waktu sistem (misalnya jika jam sistem diubah), sehingga interval waktu eksekusi yang dicatat (Makespan) adalah seakurat mungkin.
 
 ## 4. Validasi Upaya Komputasi (Iterasi)
-
-<img width="751" height="302" alt="Screenshot 2025-11-21 101020" src="https://github.com/user-attachments/assets/59084f5b-6428-4057-ac14-d18b5941a7c0" />
 
 Kami menetapkan batas iterasi yang jelas (SHC_ITERATIONS di scheduler.py): $\mathbf{1000}$ untuk SHC baseline dan $\mathbf{5000}$ untuk SMA yang dioptimalkan.
 
