@@ -200,3 +200,29 @@ Secara umum, algoritma SMA berhasil melakukan penjadwalan tugas (task scheduling
 | Rata-rata Wait Time   |  3.15 detik |	3.05 detik |	1.54 detik (Terbaik) |
 | Total Beban Eksekusi (Semua Tugas) |  229.6 detik |	248.3 detik |	221.1 detik |
 | VM Tersibuk  |  VM4 (11 tugas) |	VM4 (9 tugas) |	VM4 (8 tugas) |
+
+## Analisis Alokasi Load Balancing
+Algoritma SMA dirancang untuk meminimalkan waktu selesai dengan memanfaatkan spesifikasi VM. Berdasarkan kode scheduler.py, spesifikasi VM adalah:
+
+* VM1: 1 Core
+
+* VM2: 2 Core
+
+* VM3: 4 Core
+
+* VM4: 8 Core
+
+Data distribusi beban dari hasil tes menunjukkan algoritma bekerja sesuai logika kapasitas:
+
+Contoh Distribusi (dari Revisi 1):
+
+<img width="738" height="874" alt="image" src="https://github.com/user-attachments/assets/d68cef08-9a6c-4b2a-8954-f9af408b6bd1" />
+
+
+* VM4 (8 Core): Menangani 11 tugas dengan total durasi beban kerja 120 detik. Namun, karena memiliki 8 core, ia dapat memproses banyak tugas secara paralel, sehingga selesai dalam waktu 25 detik.
+
+* VM1 (1 Core): Hanya menangani 4 tugas dengan total beban 22 detik.
+
+* VM2 & VM3: Mendapat porsi menengah (1-4 tugas).
+
+Kesimpulan: Algoritma tidak membagi tugas secara "rata jumlahnya", melainkan rata kinerjanya. Jika tugas dibagi rata secara jumlah (misal semua dapat 5 tugas), VM1 akan kewalahan dan membuat sistem lambat (bottleneck), sementara VM4 akan menganggur. SMA menghindari hal ini dengan memberikan VM4 pekerjaan 2-3x lipat lebih banyak.
