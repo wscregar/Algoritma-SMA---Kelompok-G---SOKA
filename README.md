@@ -252,3 +252,43 @@ Contoh Distribusi (dari Revisi 1):
 * VM2 & VM3: Mendapat porsi menengah (1-4 tugas).
 
 Kesimpulan: Algoritma tidak membagi tugas secara "rata jumlahnya", melainkan rata kinerjanya. Jika tugas dibagi rata secara jumlah (misal semua dapat 5 tugas), VM1 akan kewalahan dan membuat sistem lambat (bottleneck), sementara VM4 akan menganggur. SMA menghindari hal ini dengan memberikan VM4 pekerjaan 2-3x lipat lebih banyak.
+
+# Analisis Kinerja Algoritma Slime Mould (SMA)
+
+Dokumen ini menyajikan analisis hasil pengujian 10 kali (runs) pada Algoritma Slime Mould (SMA) untuk penjadwalan tugas di lingkungan Virtual Machine (VM) Heterogen.
+
+## 1. Parameter Uji Coba
+
+| Parameter | Nilai | Keterangan |
+| :--- | :--- | :--- |
+| **Algoritma** | SMA (Modifikasi Konsistensi) | Dilengkapi logika pergerakan acak eksplosif (noise). |
+| **Jumlah Iterasi** | 5000 | Waktu pencarian yang cukup panjang. |
+| **Ukuran Populasi** | 50 | Diversitas solusi awal yang besar. |
+| **Lingkungan VM** | 4 VM (1, 2, 4, 8 Core) | Heterogenitas sumber daya yang tinggi. |
+| **Jumlah Tugas** | 20 Tugas | Beban tugas yang bervariasi (Load $\propto Index^2$). |
+
+## 2. Hasil Rata-Rata (10x Run)
+
+| Parameter | Total Nilai (Sum) | Rata-Rata ($\bar{x}$) | Satuan |
+| :--- | :---: | :---: | :--- |
+| **Makespan** (Waktu Total) | 261.9830 | **26.1983** | detik |
+| **Throughput** | 7.6400 | **0.7640** | tugas/detik |
+| **Total CPU Time** | 243.0170 | **24.3017** | detik |
+| **Total Wait Time** | 453.7140 | **45.3714** | detik |
+| **Resource Utilization (CPU)** | 612.165% | **61.2165%** | % |
+| **Imbalance Degree** | 15.3447 | **1.5345** | (tanpa satuan) |
+
+## 3. Pembahasan Hasil
+
+Hasil rata-rata 10 kali run menunjukkan bahwa SMA memiliki **potensi optimalitas tinggi** (terbukti dari hasil terbaik individu $\approx 15.22$ detik), namun memiliki **konsistensi yang rendah** (terbukti dari Makespan rata-rata $26.1983$ detik).
+
+### A. Dominasi Imbalance Degree terhadap Makespan
+
+Faktor utama yang menyebabkan Makespan rata-rata tinggi adalah **Imbalance Degree yang tinggi ($\mathbf{1.5345}$)** dan Total Wait Time yang signifikan ($\mathbf{45.37}$ detik).
+
+* **Penyebab:** Ketika algoritma gagal mendistribusikan beban tugas yang sangat bervariasi (berbanding lurus dengan $Index^2$), beberapa VM (terutama yang memiliki *core* lebih sedikit) menjadi sangat jenuh, sementara VM lainnya menganggur. Waktu tunggu ini secara langsung menaikkan Makespan.
+* **Kesimpulan:** Logika SMA, bahkan dengan penambahan *noise* (L. 133-135 pada `shc_algorithm.py`), belum cukup efisien untuk mengatasi kerumitan penjadwalan di lingkungan heterogen yang memiliki **kendala Makespan**.
+
+### B. Tingkat Pemanfaatan Sumber Daya
+
+Resource Utilization sebesar $\mathbf{61.21\%}$ menunjukkan bahwa rata-rata $\approx 38.79\%$ kapasitas CPU total terbuang karena waktu tunggu. Ini mendukung argumen bahwa **penempatan tugas tidak seimbang**, mengakibatkan terbuangnya kapasitas dari VM yang kosong sementara VM lain terlalu sibuk.
