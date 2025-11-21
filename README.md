@@ -180,3 +180,22 @@ Kami menetapkan batas iterasi yang jelas (SHC_ITERATIONS di scheduler.py): $\mat
 Validasi: Menetapkan upaya komputasi memvalidasi bahwa perbandingan dilakukan secara adil, di mana SMA (sebagai algoritma yang lebih kompleks) diberikan waktu pencarian yang lebih banyak untuk menunjukkan potensi superioritasnya.
 
 # Pembahasan Hasil
+
+## Ringkasam Hasil
+
+Secara umum, algoritma SMA berhasil melakukan penjadwalan tugas (task scheduling) dengan sangat stabil dan efisien.
+
+* Konsistensi Tinggi: Ketiga pengujian menghasilkan total waktu penyelesaian (Makespan) yang hampir identik, yaitu sekitar 25.7 detik.
+
+* Alokasi Cerdas: Algoritma secara cerdas membebankan tugas terbanyak ke VM dengan spesifikasi tertinggi (VM4, 8 Core) dan tugas paling sedikit ke VM terlemah (VM1, 1 Core).
+
+* Efisiensi Waktu Tunggu: Rata-rata waktu tunggu (wait time) relatif rendah, terutama pada pengujian ketiga yang mencapai angka terbaik (1.5 detik).
+
+## Perbandingan Hasil Pengujian (Metrik Utama)
+
+| Metrik | Revisi 1 (sma_results_revisi) | Revisi 2 (sma_results_revisi2) | Revisi 3 (sma_results_revisi3) |
+|----|-------|-------|-------|
+| Makespan (Waktu Selesai Total) |  25.66 detik	| 25.75 detik |	25.70 detik |
+| Rata-rata Wait Time   |  3.15 detik |	3.05 detik |	1.54 detik (Terbaik) |
+| Total Beban Eksekusi (Semua Tugas) |  229.6 detik |	248.3 detik |	221.1 detik |
+| VM Tersibuk  |  VM4 (11 tugas) |	VM4 (9 tugas) |	VM4 (8 tugas) |
