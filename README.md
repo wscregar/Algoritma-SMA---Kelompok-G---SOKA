@@ -123,26 +123,39 @@ Dalam cloud computing, SMA dipakai untuk mengoptimalkan hal-hal seperti:
 
 Bagian ini memvalidasi bahwa pengujian antara SHC dan SMA dilakukan di bawah kondisi simulasi yang terkontrol, realistis, dan dapat dibandingkan.
 
-1. Validasi Lingkungan Pengujian (Scheduler.py)
+## 1. Validasi Lingkungan Pengujian (Scheduler.py)
 
-Kami memvalidasi bahwa sumber daya VM dan beban tugas didefinisikan secara realistis dan heterogen.Definisi Sumber Daya Heterogen:VM tidak seragam. Kami mendefinisikan 4 VM dengan spesifikasi CPU yang berbeda-beda: 1, 2, 4, dan 8 core (ditemukan di VM_SPECS pada scheduler.py).
+<img width="513" height="129" alt="Screenshot 2025-11-21 100717" src="https://github.com/user-attachments/assets/f2e0dbc6-45ea-4b76-a7a5-748a4d6f006d" />
+
+Kami memvalidasi bahwa sumber daya VM dan beban tugas didefinisikan secara realistis dan heterogen.Definisi Sumber Daya Heterogen:VM tidak seragam. 
+
+Kami mendefinisikan 4 VM dengan spesifikasi CPU yang berbeda-beda: 1, 2, 4, dan 8 core.
 
 Hal ini penting untuk menguji kemampuan algoritma dalam melakukan load balancing yang kompleks.
 
-Beban Tugas Bervariasi:Tugas (Task) juga memiliki beban CPU yang bervariasi secara signifikan (berdasarkan formula (index * index * 10000)).
+<img width="318" height="75" alt="Screenshot 2025-11-21 100809" src="https://github.com/user-attachments/assets/97c22e80-85fd-4377-8d36-ecb324484666" />
 
+Beban Tugas Bervariasi:Tugas (Task) juga memiliki beban CPU yang bervariasi secara signifikan (berdasarkan formula (index * index * 10000)).
 
 Ini mereplikasi skenario nyata di mana scheduler harus menangani tugas-tugas kecil dan heavy-duty secara bersamaan.
 
-Validasi Kendala Kapasitas (Semaphore) 🚧Ini adalah bukti bahwa simulasi eksekusi tugas Anda tunduk pada kendala sumber daya fisik.
+## 2. Validasi Kendala Kapasitas (Semaphore)
+
+Ini adalah bukti bahwa simulasi eksekusi tugas Anda tunduk pada kendala sumber daya fisik.
   
-Implementasi Kendala CPU: Kami menggunakan objek asyncio.Semaphore di Python.Mekanisme: Semaphore pada setiap VM disetel sesuai dengan jumlah core CPU-nya (misalnya, VM4 (8 core) memiliki semaphore 8).
+Implementasi Kendala CPU: Kami menggunakan objek `asyncio.Semaphore` di Python.
+
+<img width="668" height="58" alt="Screenshot 2025-11-21 100912" src="https://github.com/user-attachments/assets/9c806a29-e735-4a55-85eb-636e267c7e48" />
+
+Mekanisme: Semaphore pada setiap VM disetel sesuai dengan jumlah core CPU-nya (misalnya, VM4 (8 core) memiliki semaphore 8).
+
+<img width="578" height="60" alt="Screenshot 2025-11-21 100923" src="https://github.com/user-attachments/assets/45e5ec48-05c1-48a4-8603-fec97b5e4679" />
 
 Fungsi: Tugas harus mendapatkan token dari semaphore VM-nya sebelum dapat dieksekusi. Jika 8 core VM4 sedang sibuk, tugas ke-9 harus menunggu (wait) hingga salah satu selesai.
 
 Validasi: Mekanisme ini memvalidasi simulasi paralel dan memastikan Makespan yang diukur benar-benar mencerminkan kemacetan dan pemanfaatan sumber daya yang terjadi di cloud nyata.
 
-3. Validasi Metrik dan Konsistensi Pengukuran
+## 3. Validasi Metrik dan Konsistensi Pengukuran
 
 Kami memastikan bahwa pengukuran Makespan konsisten dan akurat.Model Makespan Bersama: Kedua algoritma (SHC dan SMA) menggunakan fungsi biaya yang identik (calculate_estimated_makespan di shc_algorithm.py).
 
@@ -156,7 +169,13 @@ Pengukuran Waktu Akurat: Pengukuran waktu total dilakukan menggunakan time.monot
 
 Validasi: Penggunaan monotonic memastikan bahwa waktu yang diukur kebal terhadap perubahan waktu sistem (misalnya jika jam sistem diubah), sehingga interval waktu eksekusi yang dicatat (Makespan) adalah seakurat mungkin.
 
-4. Validasi Upaya Komputasi (Iterasi)Kami menetapkan batas iterasi yang jelas (SHC_ITERATIONS di scheduler.py): $\mathbf{1000}$ untuk SHC baseline dan $\mathbf{5000}$ untuk SMA yang dioptimalkan.
+## 4. Validasi Upaya Komputasi (Iterasi)
+
+<img width="751" height="302" alt="Screenshot 2025-11-21 101020" src="https://github.com/user-attachments/assets/59084f5b-6428-4057-ac14-d18b5941a7c0" />
+
+Kami menetapkan batas iterasi yang jelas (SHC_ITERATIONS di scheduler.py): $\mathbf{1000}$ untuk SHC baseline dan $\mathbf{5000}$ untuk SMA yang dioptimalkan.
+
+<img width="193" height="36" alt="image" src="https://github.com/user-attachments/assets/3426eb0d-b57a-466e-82f4-7035605e6b7c" />
 
 Validasi: Menetapkan upaya komputasi memvalidasi bahwa perbandingan dilakukan secara adil, di mana SMA (sebagai algoritma yang lebih kompleks) diberikan waktu pencarian yang lebih banyak untuk menunjukkan potensi superioritasnya.
 
