@@ -172,6 +172,32 @@ Pengukuran Waktu Akurat: Pengukuran waktu total dilakukan menggunakan time.monot
 
 Validasi: Penggunaan monotonic memastikan bahwa waktu yang diukur kebal terhadap perubahan waktu sistem (misalnya jika jam sistem diubah), sehingga interval waktu eksekusi yang dicatat (Makespan) adalah seakurat mungkin.
 
+### Implementasi Algoritma Slime Mould (SMA)
+
+Implementasi SMA dapat dibagi menjadi empat tahap utama yang mereplikasi perilaku pencarian jamur lendir.
+
+####  Setup & Encoding
+
+Populasi Awal (population):
+
+<img width="273" height="98" alt="Screenshot 2025-11-21 104313" src="https://github.com/user-attachments/assets/fd4eb02a-aa5d-4bbf-af37-730cb8b3aa5b" />
+
+menetapkan jumlah solusi yang dicari. Ini seperti 50 "tubuh" jamur lendir yang mencari makan.
+
+<img width="640" height="45" alt="Screenshot 2025-11-21 104343" src="https://github.com/user-attachments/assets/1c9fe887-6e9f-428a-9655-cb4f848e009a" />
+
+membuat solusi acak awal, di mana setiap tugas (kolom) diberi VM (nilai 0 hingga 3).
+
+Evaluasi Awal (fitness) :
+
+<img width="816" height="302" alt="image" src="https://github.com/user-attachments/assets/1f1463f4-dbd5-45af-8277-2f47984b1228" />
+
+digunakan untuk mengevaluasi Makespan (kualitas makanan) dari setiap solusi awal
+
+<img width="390" height="64" alt="image" src="https://github.com/user-attachments/assets/0a82c3b5-5dfd-4c4c-baf5-13134519120e" />
+
+mencatat Makespan terbaik yang ditemukan sejauh ini.
+
 ## 4. Validasi Upaya Komputasi (Iterasi)
 
 Kami menetapkan batas iterasi yang jelas (SHC_ITERATIONS di scheduler.py): $\mathbf{1000}$ untuk SHC baseline dan $\mathbf{5000}$ untuk SMA yang dioptimalkan.
