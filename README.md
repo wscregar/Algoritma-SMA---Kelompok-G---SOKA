@@ -1,5 +1,14 @@
 # Algoritma-SMA---Kelompok-G---SOKA
 
+## Anggota Kelompok
+| No | Nama | NRP |
+|----|-------|-------|
+| 1  |   Wira Samudra S    |  5027231041     |
+| 2  |  Farand Febriansyah     |  5027231084   |
+| 3  |  Muhammad Syahmi A    |   5027231085    |
+| 4  |  Veri Rahman    |   5027231088    |
+| 5. |  Abid Ubaidillah A  |   5027231089    |
+
 # Pengujian Algoritma Task Scheduler pada Server IT
 
 Repo ini merupakan kode dari server yang digunakan dalam pengujian Task Scheduling pada Server IT serta contoh algoritma scheduler untuk keperluan mata kuliah **Strategi Optimasi Komputasi Awan (SOKA)**
@@ -111,5 +120,44 @@ Dalam cloud computing, SMA dipakai untuk mengoptimalkan hal-hal seperti:
 * **Fleksibel** → cocok untuk beragam jenis optimasi.
   
 # Teknis Uji Coba
+
+Bagian ini memvalidasi bahwa pengujian antara SHC dan SMA dilakukan di bawah kondisi simulasi yang terkontrol, realistis, dan dapat dibandingkan.
+
+1. Validasi Lingkungan Pengujian (Scheduler.py)
+
+Kami memvalidasi bahwa sumber daya VM dan beban tugas didefinisikan secara realistis dan heterogen.Definisi Sumber Daya Heterogen:VM tidak seragam. Kami mendefinisikan 4 VM dengan spesifikasi CPU yang berbeda-beda: 1, 2, 4, dan 8 core (ditemukan di VM_SPECS pada scheduler.py).
+
+Hal ini penting untuk menguji kemampuan algoritma dalam melakukan load balancing yang kompleks.
+
+Beban Tugas Bervariasi:Tugas (Task) juga memiliki beban CPU yang bervariasi secara signifikan (berdasarkan formula (index * index * 10000)).
+
+
+Ini mereplikasi skenario nyata di mana scheduler harus menangani tugas-tugas kecil dan heavy-duty secara bersamaan.
+
+Validasi Kendala Kapasitas (Semaphore) 🚧Ini adalah bukti bahwa simulasi eksekusi tugas Anda tunduk pada kendala sumber daya fisik.
+  
+Implementasi Kendala CPU: Kami menggunakan objek asyncio.Semaphore di Python.Mekanisme: Semaphore pada setiap VM disetel sesuai dengan jumlah core CPU-nya (misalnya, VM4 (8 core) memiliki semaphore 8).
+
+Fungsi: Tugas harus mendapatkan token dari semaphore VM-nya sebelum dapat dieksekusi. Jika 8 core VM4 sedang sibuk, tugas ke-9 harus menunggu (wait) hingga salah satu selesai.
+
+Validasi: Mekanisme ini memvalidasi simulasi paralel dan memastikan Makespan yang diukur benar-benar mencerminkan kemacetan dan pemanfaatan sumber daya yang terjadi di cloud nyata.
+
+3. Validasi Metrik dan Konsistensi Pengukuran
+
+Kami memastikan bahwa pengukuran Makespan konsisten dan akurat.Model Makespan Bersama: Kedua algoritma (SHC dan SMA) menggunakan fungsi biaya yang identik (calculate_estimated_makespan di shc_algorithm.py).
+
+Model ini menghitung waktu eksekusi sebagai: $\frac{\text{Beban Tugas}}{\text{Core VM}}$.
+
+Makespan adalah nilai $\mathbf{\text{MAX}}$ dari total waktu yang dihabiskan semua VM.
+
+Validasi: Memastikan bahwa perbandingan hasil (misalnya $15.22$ detik vs $15.4$ detik) adalah valid karena diukur menggunakan skala yang sama.
+
+Pengukuran Waktu Akurat: Pengukuran waktu total dilakukan menggunakan time.monotonic() (di scheduler.py).
+
+Validasi: Penggunaan monotonic memastikan bahwa waktu yang diukur kebal terhadap perubahan waktu sistem (misalnya jika jam sistem diubah), sehingga interval waktu eksekusi yang dicatat (Makespan) adalah seakurat mungkin.
+
+4. Validasi Upaya Komputasi (Iterasi)Kami menetapkan batas iterasi yang jelas (SHC_ITERATIONS di scheduler.py): $\mathbf{1000}$ untuk SHC baseline dan $\mathbf{5000}$ untuk SMA yang dioptimalkan.
+
+Validasi: Menetapkan upaya komputasi memvalidasi bahwa perbandingan dilakukan secara adil, di mana SMA (sebagai algoritma yang lebih kompleks) diberikan waktu pencarian yang lebih banyak untuk menunjukkan potensi superioritasnya.
 
 # Pembahasan Hasil
