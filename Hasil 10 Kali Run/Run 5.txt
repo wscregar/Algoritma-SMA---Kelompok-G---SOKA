@@ -1,0 +1,11 @@
+--- Hasil ---
+Total Tugas Selesai       : 20
+Makespan (Waktu Total)    : 25.5620 detik
+Throughput                : 0.7824 tugas/detik
+Total CPU Time            : 223.3660 detik
+Total Wait Time           : 93.1110 detik
+Average Start Time (rel)  : 4.6650 detik
+Average Execution Time    : 11.1683 detik
+Average Finish Time (rel) : 15.8363 detik
+Imbalance Degree          : 1.1573
+Resource Utilization (CPU): 58.2547%
